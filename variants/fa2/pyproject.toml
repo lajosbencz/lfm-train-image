@@ -1,9 +1,7 @@
 [project]
-name = "lfm-train-image"
+name = "lfm-train-fa2"
 version = "0.1.0"
-description = "Optimized base image for training LiquidAI LFM2.5 models"
-readme = "README.md"
-license = "MIT"
+description = "LFM2.5 training deps — fa2 (torch 2.8 pinned for the prebuilt flash-attn wheel)"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "torch==2.8.0",

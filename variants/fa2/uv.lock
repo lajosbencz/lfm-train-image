@@ -380,7 +380,7 @@ wheels = [
 ]
 
 [[package]]
-name = "lfm-train-image"
+name = "lfm-train-fa2"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
