@@ -1,0 +1,31 @@
+[project]
+name = "lfm-train-image"
+version = "0.1.0"
+description = "Optimized base image for training LiquidAI LFM2.5 models"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch==2.8.0",
+    "transformers>=5.0",
+    "accelerate>=1.6",
+    "datasets>=3.2",
+    "peft>=0.14",
+    "trl>=0.24",
+    "bitsandbytes>=0.45",
+    "huggingface-hub>=0.28",
+    "hf-transfer>=0.1.9",
+    "safetensors>=0.4.5",
+    "sentencepiece>=0.2",
+]
+
+[tool.uv]
+package = false
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
