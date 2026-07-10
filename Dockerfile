@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/uv uv pip install --python /opt/venv 
 
 
 FROM ${FA2_RUNTIME} AS fa2
-RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=uvbin /uv /uvx /bin/
 COPY --chown=1000:1000 --from=fa2-builder /opt/venv /opt/venv
@@ -74,7 +74,7 @@ CMD ["bash"]
 
 
 FROM ${GENERIC_RUNTIME} AS generic
-RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
+RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=uvbin /uv /uvx /bin/
 COPY --chown=1000:1000 --from=generic-builder /opt/venv /opt/venv
