@@ -7,6 +7,9 @@ ARG LLAMA_TAG=b9949
 ARG FLASH_ATTN_WHEEL=https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3.post1/flash_attn-2.8.3.post1%2Bcu12torch2.8cxx11abiTRUE-cp312-cp312-linux_x86_64.whl
 
 
+FROM ${UV_IMAGE} AS uvbin
+
+
 FROM ${FA2_DEVEL} AS llama
 ARG LLAMA_TAG
 RUN apt-get update && apt-get install -y --no-install-recommends git cmake build-essential \
@@ -22,10 +25,9 @@ RUN git clone --depth 1 --branch "${LLAMA_TAG}" https://github.com/ggml-org/llam
 
 
 FROM ${GENERIC_DEVEL} AS generic-builder
-ARG UV_IMAGE
 RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=${UV_IMAGE} /uv /uvx /bin/
+COPY --from=uvbin /uv /uvx /bin/
 ENV UV_LINK_MODE=copy UV_COMPILE_BYTECODE=1 UV_PYTHON=/usr/bin/python3.12 UV_PROJECT_ENVIRONMENT=/opt/venv
 WORKDIR /build
 COPY variants/generic/pyproject.toml variants/generic/uv.lock ./
@@ -35,11 +37,10 @@ RUN --mount=type=cache,target=/root/.cache/uv uv pip install --python /opt/venv 
 
 
 FROM ${FA2_DEVEL} AS fa2-builder
-ARG UV_IMAGE
 ARG FLASH_ATTN_WHEEL
 RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=${UV_IMAGE} /uv /uvx /bin/
+COPY --from=uvbin /uv /uvx /bin/
 ENV UV_LINK_MODE=copy UV_COMPILE_BYTECODE=1 UV_PYTHON=/usr/bin/python3.12 UV_PROJECT_ENVIRONMENT=/opt/venv
 WORKDIR /build
 COPY variants/fa2/pyproject.toml variants/fa2/uv.lock ./
@@ -50,10 +51,9 @@ RUN --mount=type=cache,target=/root/.cache/uv uv pip install --python /opt/venv 
 
 
 FROM ${FA2_RUNTIME} AS fa2
-ARG UV_IMAGE
 RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=${UV_IMAGE} /uv /uvx /bin/
+COPY --from=uvbin /uv /uvx /bin/
 COPY --chown=1000:1000 --from=fa2-builder /opt/venv /opt/venv
 COPY --from=llama /out/gguf /opt/gguf
 COPY --from=llama /out/bin/llama-quantize /usr/local/bin/llama-quantize
@@ -74,10 +74,9 @@ CMD ["bash"]
 
 
 FROM ${GENERIC_RUNTIME} AS generic
-ARG UV_IMAGE
 RUN apt-get update && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
     && rm -rf /var/lib/apt/lists/*
-COPY --from=${UV_IMAGE} /uv /uvx /bin/
+COPY --from=uvbin /uv /uvx /bin/
 COPY --chown=1000:1000 --from=generic-builder /opt/venv /opt/venv
 COPY --from=llama /out/gguf /opt/gguf
 COPY --from=llama /out/bin/llama-quantize /usr/local/bin/llama-quantize
