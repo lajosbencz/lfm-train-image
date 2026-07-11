@@ -26,6 +26,7 @@ Both variants share the training stack; only torch/CUDA and the attention packag
 
 - Python 3.12, **non-root** (uid 1000).
 - **Training stack**: `transformers 5.x`, `trl`, `peft`, `accelerate`, `datasets`, `bitsandbytes`, `huggingface-hub`, `hf-transfer`, `safetensors`, `sentencepiece`.
+- `gcc` + Python headers (`python3-dev`) - LFM2 JIT-compiles a Triton kernel at training time.
 - **GGUF export** (CPU): `llama-quantize` (llama.cpp `b9949`, static) on `PATH`, plus `convert_hf_to_gguf.py` + `gguf` - supports `lfm2` and `lfm2moe`.
 - `generic`: CUDA 13.0.3 base, `torch 2.13.0+cu130`.
 - `fa2`: CUDA 12.8.1 base, `torch 2.8.0+cu128`, `flash-attn 2.8.3.post1` (prebuilt wheel).
