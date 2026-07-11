@@ -77,6 +77,7 @@ FROM fa2 AS fa2-ssh
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends openssh-server \
     && mkdir -p /var/run/sshd \
+    && rm -f /etc/ssh/ssh_host_*_key /etc/ssh/ssh_host_*_key.pub \
     && rm -rf /var/lib/apt/lists/*
 COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
 COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
@@ -112,6 +113,7 @@ FROM generic AS generic-ssh
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends openssh-server \
     && mkdir -p /var/run/sshd \
+    && rm -f /etc/ssh/ssh_host_*_key /etc/ssh/ssh_host_*_key.pub \
     && rm -rf /var/lib/apt/lists/*
 COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
 COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
