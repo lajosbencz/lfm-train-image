@@ -43,6 +43,7 @@ base images and the `uv` image are pinned by digest in the `Dockerfile`.
   sshd requires root, and root-login-over-SSH is the standard convention for remote-managed pods.
   sshd only starts if `PUBLIC_KEY` is injected at runtime; key-only auth, no password/interactive
   fallback (`sshd-hardening.conf`); host keys are generated fresh per container start, never baked.
+- The `-ssh`/`-ssh-fa2` default `CMD` is `sleep infinity`.
 
 ## Runtime configuration
 

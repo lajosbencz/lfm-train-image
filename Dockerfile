@@ -83,7 +83,7 @@ COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
 COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
 EXPOSE 22
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/ssh-entrypoint.sh"]
-CMD ["bash"]
+CMD ["sleep", "infinity"]
 
 
 FROM ${GENERIC_RUNTIME} AS generic
@@ -119,4 +119,4 @@ COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
 COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
 EXPOSE 22
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/ssh-entrypoint.sh"]
-CMD ["bash"]
+CMD ["sleep", "infinity"]
