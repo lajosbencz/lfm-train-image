@@ -50,6 +50,8 @@ jobs:
           target: ${{ matrix.target }}
           load: true
           tags: ${{ env.IMAGE }}:${{ github.ref_name }}${{ matrix.suffix }}
+          cache-from: type=registry,ref=${{ env.IMAGE }}:buildcache-${{ matrix.target }}
+          cache-to: type=registry,ref=${{ env.IMAGE }}:buildcache-${{ matrix.target }},mode=max,image-manifest=true
 
       - uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
