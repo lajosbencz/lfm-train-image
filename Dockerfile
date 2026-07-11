@@ -73,6 +73,18 @@ ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["bash"]
 
 
+FROM fa2 AS fa2-ssh
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends openssh-server \
+    && mkdir -p /var/run/sshd \
+    && rm -rf /var/lib/apt/lists/*
+COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
+COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
+EXPOSE 22
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/ssh-entrypoint.sh"]
+CMD ["bash"]
+
+
 FROM ${GENERIC_RUNTIME} AS generic
 RUN apt-get update && apt-get -y upgrade && apt-get install -y --no-install-recommends python3 ca-certificates tini libgomp1 \
     && rm -rf /var/lib/apt/lists/*
@@ -93,4 +105,16 @@ ENV HOME=/home/trainer \
 USER 1000
 WORKDIR /home/trainer
 ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["bash"]
+
+
+FROM generic AS generic-ssh
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends openssh-server \
+    && mkdir -p /var/run/sshd \
+    && rm -rf /var/lib/apt/lists/*
+COPY sshd-hardening.conf /etc/ssh/sshd_config.d/hardening.conf
+COPY --chmod=0755 ssh-entrypoint.sh /usr/local/bin/ssh-entrypoint.sh
+EXPOSE 22
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/ssh-entrypoint.sh"]
 CMD ["bash"]

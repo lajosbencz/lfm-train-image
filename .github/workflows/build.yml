@@ -23,6 +23,10 @@ jobs:
             suffix: ""
           - target: fa2
             suffix: "-fa2"
+          - target: generic-ssh
+            suffix: "-ssh"
+          - target: fa2-ssh
+            suffix: "-ssh-fa2"
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
